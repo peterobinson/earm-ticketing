@@ -1,0 +1,23 @@
+{
+    "name": "pedro/ticketing",
+    "description": "",
+    "authors": [
+        {
+            "name": "Peter Robinson",
+            "email": "peterobinson@server.fake"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Pedro\\Ticketing": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
