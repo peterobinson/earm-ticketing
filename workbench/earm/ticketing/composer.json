@@ -1,0 +1,27 @@
+{
+    "name": "earm/ticketing",
+    "description": "",
+    "authors": [
+        {
+            "name": "Peter Robinson",
+            "email": "peterobinson@server.fake"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations",
+            "src/models",
+            "src/controllers"
+        ],
+        "psr-0": {
+            "Earm\\Ticketing": "src/",
+            "Earm\\Ticketing\\Models": "src/models",
+            "Earm\\Ticketing\\Controllers": "src/controllers"
+        }
+    },
+    "minimum-stability": "dev"
+}
