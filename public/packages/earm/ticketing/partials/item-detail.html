@@ -1,1 +1,30 @@
-<p>Item: {{lineItem.title}}</p>
+<div ng-controller="LineItemDetailCtrl">
+	<ul>
+		<li ng-repeat="error in updateErrors">
+			{{error}}
+		</li>
+	</ul>
+
+	<form ng-submit="updateItem()">
+		<input type="text" ng-model="lineItem.title" />
+
+		<select ng-model="lineItem.ticket_type">
+			<option value="Duration">Duration</option>
+			<option value="Event">Event</option>
+		</select>
+
+		
+
+		<input type="submit" ng-disabled="formDisabled" value="Update" />
+	</form>
+</div>
+
+<div ng-controller="LineItemTicketTypes">
+<h2>Ticket Types</h2>
+
+	<ul>
+		<li ng-repeat="type in ticketTypes">
+			<a href="#/tickettypes/{{type.id}}">{{type.name}}</a>
+		</li>
+	</ul>
+</div>

@@ -1,6 +1,6 @@
 <?php
 
-use \Earm\Ticketing\Models\TicketType;
+//use \Earm\Ticketing\Models\TicketType;
 
 $handles = Config::get('ticketing::general.handles');
 
@@ -29,5 +29,6 @@ Route::filter('jsonifyajax',function($request, $response)
 Route::group(array('after' => 'jsonifyajax'), function() use ($handles)
 {
 	Route::resource($handles.'/apiv1/lineitems', 'Earm\Ticketing\Controllers\Apiv1\LineitemController');
+	Route::get($handles.'/apiv1/lineitems/{id}/tickettypes', 'Earm\Ticketing\Controllers\Apiv1\LineitemController@tickettypes');
 	Route::resource($handles.'/apiv1/tickettypes', 'Earm\Ticketing\Controllers\Apiv1\TickettypeController');
 });

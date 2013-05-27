@@ -1,5 +1,7 @@
 <?php namespace Earm\Ticketing\Models;
 
+//use Earm\Ticketing\Models\TicketType;
+
 class LineItem extends \Eloquent
 {
 	protected $table = 'line_items';
@@ -21,6 +23,15 @@ class LineItem extends \Eloquent
 
 
 	protected $errors = null;
+
+	public function ticketTypes()
+	{
+		//$type = new TicketType;
+		//print_r(get_declared_classes());
+		//return new TicketType;
+		return $this->hasMany('\Earm\Ticketing\Models\TicketType');
+		//return $this->hasOne('Order');
+	}
 
 	public function save(array $options = array())
 	{
@@ -45,5 +56,12 @@ class LineItem extends \Eloquent
     public function validation_errors()
     {
     	return $this->errors;
+    }
+
+    public function initialise()
+    {
+    	$this->title = '';
+    	$this->ticket_type = '';
+    	$this->enabled = 0;
     }
 }

@@ -2,6 +2,7 @@
 
 use \Earm\Ticketing\Models\LineItem;
 
+
 class LineitemController extends \BaseController
 {
 	/**
@@ -22,7 +23,11 @@ class LineitemController extends \BaseController
 	public function create()
 	{
 		//
+		$item = new LineItem();
 
+		$item->initialise();
+
+		return $item;
 
 	}
 
@@ -80,6 +85,19 @@ class LineitemController extends \BaseController
 	public function edit($id)
 	{
 
+	}
+
+	/**
+	 * Show the related ticket types for this line item
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+
+	public function tickettypes($id)
+	{
+		
+		return LineItem::findOrfail($id)->ticketTypes;
 	}
 
 	/**

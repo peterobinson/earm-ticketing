@@ -24,6 +24,7 @@ class TicketType extends \Eloquent
 						'end_year',
 						'end_hour',
 						'end_minutes',
+						'max_number',
 						);
 
 	protected static $rules = array(
@@ -32,6 +33,7 @@ class TicketType extends \Eloquent
 						'duration' => array('min:0'),
 						'price' => array('required','integer','min:0'),
 						'name' => array('required', 'max:64'),
+						'max_number' => array('integer','min:0'),
 						);
 
 	protected $errors = null;
