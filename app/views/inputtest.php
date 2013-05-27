@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <?=Form::open(array(
-				'url' => 'tickets/lineitem',
+				'url' => 'tickets/tickettype',
 				'method' => 'post',
 			))
 ?>
 
-<?=Form::label('title', 'Line item title')?>
-<?=Form::text('title')?>
+<?=Form::label('name', 'Name')?>
+<?=Form::text('name')?>
 
-<?=Form::label('ticket_type', 'Ticket type')?>
-<?=Form::select('ticket_type', array('Duration'=>'Duration','Event'=>'Event'))?>
+<?=Form::label('price', 'price')?>
+<?=Form::text('price')?>
 
 
-<?=Form::label('enabled', 'Enabled')?>
-<?=Form::radio('enabled',1)?>
-<?=Form::radio('enabled',0)?>
+<?=Form::label('duration', 'Duration')?>
+<?=Form::text('duration')?>
 
-<?=Form::text('chickens')?>
+<?=Form::label('start_day', 'Day')?>
+<?=Form::text('start_day')?>
+
+<?=Form::label('start_month', 'Month')?>
+<?=Form::text('start_month')?>
+
+<?=Form::label('start_year', 'Year')?>
+<?=Form::text('start_year')?>
 
 <?=Form::submit()?>
 

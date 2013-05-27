@@ -1,6 +1,6 @@
 <?php namespace Earm\Ticketing\Models;
 
-class Lineitem extends \Eloquent
+class LineItem extends \Eloquent
 {
 	protected $table = 'line_items';
 
@@ -38,7 +38,6 @@ class Lineitem extends \Eloquent
 				return false;
 			}
 
-			echo "valid";
         return parent::save($options);
 
     }

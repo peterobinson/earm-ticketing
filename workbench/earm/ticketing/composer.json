@@ -20,7 +20,8 @@
         "psr-0": {
             "Earm\\Ticketing": "src/",
             "Earm\\Ticketing\\Models": "src/models",
-            "Earm\\Ticketing\\Controllers": "src/controllers"
+            "Earm\\Ticketing\\Controllers": "src/controllers",
+            "Earm\\Ticketing\\Controllers\\Apiv1": "src/controllers/apiv1"
         }
     },
     "minimum-stability": "dev"
