@@ -1,0 +1,24 @@
+<ul>
+	<li ng-repeat="item in lineItems">
+		<a href="#/lineitem/{{item.id}}">{{item.title}}</a>
+	</li>
+</ul>
+
+<ul>
+	<li ng-repeat="error in creationErrors">
+		{{error}}
+	</li>
+</ul>
+
+<form ng-submit="createItem()">
+	<input type="text" ng-model="item.title" />
+
+	<select ng-model="item.ticket_type">
+		<option value="Duration">Duration</option>
+		<option value="Event">Event</option>
+	</select>
+
+	
+
+	<input type="submit" ng-disabled="formDisabled" />
+</form>

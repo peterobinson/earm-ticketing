@@ -67,7 +67,7 @@ class TicketType extends \Eloquent
     	if( ! $validator->passes())
 		{
 
-			$this->errors = $validator->errors();
+			$this->errors = $validator->messages()->all();
 
 			return false;
 		}

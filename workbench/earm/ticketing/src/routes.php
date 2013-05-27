@@ -22,12 +22,12 @@ Route::filter('jsonifyajax',function($request, $response)
 		return Response::json($response);
 	}
 
-	//var_dump($response);
+
 	return $response;
 });
 
 Route::group(array('after' => 'jsonifyajax'), function() use ($handles)
 {
-	Route::resource($handles.'/apiv1/lineitem', 'Earm\Ticketing\Controllers\Apiv1\LineitemController');
-	Route::resource($handles.'/apiv1/tickettype', 'Earm\Ticketing\Controllers\Apiv1\TickettypeController');
+	Route::resource($handles.'/apiv1/lineitems', 'Earm\Ticketing\Controllers\Apiv1\LineitemController');
+	Route::resource($handles.'/apiv1/tickettypes', 'Earm\Ticketing\Controllers\Apiv1\TickettypeController');
 });

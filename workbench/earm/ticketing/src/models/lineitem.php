@@ -14,7 +14,7 @@ class LineItem extends \Eloquent
 
 	protected static $rules = array(
 						'title' => array('required','max:128'),
-						'ticket_type' => array('in:Event,Duration'),
+						'ticket_type' => array('required','in:Event,Duration'),
 						'enabled' => array('integer', 'min:0', 'max:1'),
 						);
 
@@ -33,7 +33,7 @@ class LineItem extends \Eloquent
         	if( ! $validator->passes())
 			{
 
-				$this->errors = $validator->errors();
+				$this->errors = $validator->messages()->all();
 
 				return false;
 			}
