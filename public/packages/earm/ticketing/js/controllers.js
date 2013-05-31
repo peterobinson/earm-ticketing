@@ -3,120 +3,149 @@
 /* Controllers */
 
 function LineItemsCtrl($scope, $http, pubsub) {
-	$http.get('tickets/apiv1/lineitems').success(function(data) {
-		$scope.lineItems = data;
-	});
+	var queryLineItems = function() {
+		$http.get('tickets/apiv1/lineitems').success(function(items) {
+			$scope.lineItems = items;
+		});
 
- 	$scope.handleClick = function(data) {
+		$http.get('tickets/apiv1/lineitems/create').success(function(blankItem) {
+			$scope.blankLineItem = blankItem;	
+		});
+	}
 
-        pubsub.publish('lineItemSelected', data);
+	$scope.lineItem = {};
+	$scope.masterItem = {};
+
+	$scope.handleClick = function(item) {
+
+        pubsub.publish('lineItemSelected', item);
+
+        $scope.masterItem = item;
+		$scope.lineItem = angular.copy(item);
     };
 
-    pubsub.subscribe('lineItemChange', function() {
-   		$http.get('tickets/apiv1/lineitems').success(function(data) {
-			$scope.lineItems = data;
-		});
-	});
-}
+	var successSubmission = function(data) {
+		if (data.error) {
+			$scope.errors = data.messages;
+			return false;
+		}
 
-function LineItemDetailCtrl($scope, $http, pubsub) {
+		$scope.lineItem = data.lineItem;
+		$scope.errors = ['Item updated successfully'];
 
-	$scope.updateFormVisible = false;
-	$scope.createFormVisible = false;
-	
-	$scope.errors = [];
+		return true;
+	}
 
-	pubsub.subscribe('lineItemSelected', function(passed) {
+	var errorAction = function(data) {
+		$scope.errors = ['Connection error has occured'];
+	}
 
-		// create new
-		if (passed == -1) {
-			$http.get('tickets/apiv1/lineitems/create').success(function(data) {
-				$scope.item = data;
-				$scope.updateFormVisible = false;
-				$scope.createFormVisible = true;
-				
-			});
+    $scope.submitItem = function() {
+    	if ($scope.lineItem.id == null) { //new item
+			$http.post('tickets/apiv1/lineitems', $scope.lineItem)
+				.success(function(data) {
+					if (successSubmission(data)) {
+						$scope.masteritem = angular.copy($scope.lineItem);
+						$scope.lineItems.push($scope.masterItem);
+						pubsub.publish('lineItemSelected', $scope.masterItem);
+					}
+				})
+				.error(errorAction);
 		}
 		else {
-	       	$http.get('tickets/apiv1/lineitems/' + passed).success(function(data) {
-				$scope.item = data;
-				$scope.createFormVisible = false;
-				$scope.updateFormVisible = true;
-				
-			});
-       	}
-	});
+			$http.put('tickets/apiv1/lineitems/' + $scope.lineItem.id, $scope.lineItem)
+				.success(function(data) {
+					if (successSubmission(data)) {
+						for(var k in $scope.lineItem) {
+							$scope.masterItem[k]=$scope.lineItem[k];
+						}
+					}
+				})
+				.error(errorAction);
+		}
+    }
 
-	$scope.updateItem = function() {
-
-		
-		$http.put('tickets/apiv1/lineitems/' + $scope.item.id, $scope.item)
-			.success(function(data) {
-				if (data.error) {
-					$scope.errors = data.messages;
-				}
-				else {
-					$scope.item = data.lineItem;
-					$scope.errors = ['Item updated successfully'];
-				}
-
-				pubsub.publish('lineItemChange', $scope.item.id);
-
-			}).error(function(data) {
-				$scope.errors = ['Connection error has occured'];
-
-			});
-	}
-
-	$scope.createItem = function() {
-
-		
-		$http.post('tickets/apiv1/lineitems', $scope.item)
-			.success(function(data) {
-				if (data.error) {
-					$scope.errors = data.messages;
-				}
-				else {
-					$scope.item = data.lineItem;
-					$scope.errors = ['Item updated successfully'];
-				}
-
-				pubsub.publish('lineItemChange', $scope.item.id);
-
-			}).error(function(data) {
-				$scope.errors = ['Connection error has occured'];
-
-			});
-	}
+    queryLineItems();
 }
 
-function LineItemTicketTypes($scope, $http, pubsub) {
-	pubsub.subscribe('lineItemSelected', function(passed) {
-		$http.get('tickets/apiv1/lineitems/' + passed + '/tickettypes/').success(function(types) {
+function TicketTypesCtrl($scope, $http, pubsub) {
+
+	$scope.ticketType = null;
+	$scope.master = null;
+
+	var getTicketTypes = function(lineItem) {
+
+		$http.get('tickets/apiv1/lineitems/' + lineItem.id + '/tickettypes').success(function(types) {
 			$scope.ticketTypes = types;
 		});
-	});
 
-	$scope.ticketTypeSelect = function(id) {
-		pubsub.publish('ticketTypeSelected', id);
-	}
-}
-
-function TicketTypeEditCtrl($scope,$http, pubsub) {
-	$scope.testcurrency = 535;
-	pubsub.subscribe('ticketTypeSelected', function(id) {
-		$http.get('tickets/apiv1/tickettypes/' + id).success(function(data) {
-			$scope.ticketTypes = data;
+		$http.get('tickets/apiv1/tickettypes/create').success(function(type) {
+			$scope.blankTicketType = type;
+			$scope.blankTicketType.line_item_id = lineItem.id;
 		});
+	}
+
+	pubsub.subscribe('lineItemSelected', function(passed) {
+
+		if (passed.id == null) {
+			$scope.ticketType = null;
+			return;
+		}
+		getTicketTypes(passed);
 	});
+
+	
+
+	$scope.ticketTypeSelect = function(type) {
+
+		$scope.master = type;
+		$scope.ticketType = angular.copy(type);
+	}
+
+	var successSubmission = function(data) {
+		if (data.error) {
+			$scope.errors = data.messages;
+			return false;
+		}
+
+		$scope.ticketType = data.ticketType;
+		$scope.errors = ['Item updated successfully'];
+
+		return true;
+	}
+
+	var errorAction = function(data) {
+		$scope.errors = ['Connection error has occured'];
+	}
+
+	$scope.submitType = function() {
+
+		if ($scope.ticketType.id == null) { //new item
+			$http.post('tickets/apiv1/tickettypes', $scope.ticketType)
+				.success(function(data) {
+					if (successSubmission(data)) {
+						$scope.master = angular.copy($scope.ticketType);
+						$scope.ticketTypes.push($scope.master);
+					}
+				})
+				.error(errorAction);
+		}
+		else {
+			$http.put('tickets/apiv1/tickettypes/' + $scope.ticketType.id, $scope.ticketType)
+				.success(function(data) {
+					if (successSubmission(data)) {
+						for(var k in $scope.ticketType) {
+							$scope.master[k]=$scope.ticketType[k];
+						}
+					}
+				})
+				.error(errorAction);
+		}
+	}
 }
 
 LineItemsCtrl.$inject = ['$scope', '$http', 'pubsub']; 
 
-LineItemDetailCtrl.$inject = ['$scope', '$http', 'pubsub'];
-
-LineItemTicketTypes.$inject = ['$scope', '$http', 'pubsub'];
-
-TicketTypeEditCtrl.$inject = ['$scope', '$http', 'pubsub'];
+TicketTypesCtrl.$inject = ['$scope', '$http', 'pubsub'];
 
 

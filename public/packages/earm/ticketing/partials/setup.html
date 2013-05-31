@@ -3,69 +3,64 @@
 		<td ng-controller="LineItemsCtrl">
 			<ul>
 				<li ng-repeat="item in lineItems">
-					<a ng-click="handleClick(item.id)">{{item.title}}</a>
+					<a ng-click="handleClick(item)">{{item.title}}</a>
 				</li>
 				<li>
-					<a ng-click="handleClick(-1)">+ Add New</a>
+					<a ng-click="handleClick(blankLineItem)">+ Add New</a>
 				</li>
-			</ul>		
-		
+			</ul>
+
+			<ul>
+				<li ng-repeat="error in errors">
+					{{error}}
+				</li>
+			</ul>
+
+			<form ng-submit="submitItem()" >
+				<input type="text" ng-model="lineItem.title" />
+				<br>
+				<select ng-model="lineItem.ticket_type">
+					<option value="Duration">Duration</option>
+					<option value="Event">Event</option>
+				</select>
+				<br>
+				<input type="submit" value="Save changes" ng-show="(lineItem.id!=null)" />
+				<input type="submit" value="Create new" ng-show="(lineItem.id==null)" />
+			</form>		
 		</td>
 
 
 		<td>
-			<div ng-controller="LineItemDetailCtrl">
+			<div ng-controller="TicketTypesCtrl">
+				<h2>Ticket Types</h2>
+
+				<ul>
+					<li ng-repeat="type in ticketTypes">
+						<a ng-click="ticketTypeSelect(type)">{{type.name}}</a>
+					</li>
+					<li>
+						<a ng-click="ticketTypeSelect(blankTicketType)">+ Add New</a>
+					</li>
+				</ul>
+
 				<ul>
 					<li ng-repeat="error in errors">
 						{{error}}
 					</li>
 				</ul>
 
-				<form ng-submit="updateItem()" ng-show="updateFormVisible" >
-					<input type="text" ng-model="item.title" />
-
-					<select ng-model="item.ticket_type">
-						<option value="Duration">Duration</option>
-						<option value="Event">Event</option>
-					</select>
-
-					<input type="submit" value="Save changes" />
-				</form>
-
-				<form ng-submit="createItem()" ng-show="createFormVisible" >
-					<input type="text" ng-model="item.title" />
-
-					<select ng-model="item.ticket_type">
-						<option value="Duration">Duration</option>
-						<option value="Event">Event</option>
-					</select>
-
-					<input type="submit" value="Create new" />
-				</form>
-
-			</div>
-			<div ng-controller="LineItemTicketTypes">
-				<h2>Ticket Types</h2>
-
-				<ul>
-					<li ng-repeat="type in ticketTypes">
-						<a ng-click="ticketTypeSelect(type.id)">{{type.name}}</a>
-					</li>
-				</ul>
-			</div>
-		</td>
-		<td>
-			<div ng-controller="TicketTypeEditCtrl">
-				<form name="myForm" ng-submit="updateType">
-					<input name="price" pencetodecimal type="number" min="0" required ng-model="type.price" />
-					<input name="duration" type="number" min="0" required ng-model="type.duration" />
-
+				<form name="myForm" ng-submit="submitType()" ng-show="(ticketType != null)">
+					<input type="text" required ng-model="ticketType.name" placeholder="Ticket Type name" /><br>
+					<input name="price" pencetodecimal type="number" min="0" required ng-model="ticketType.price" placeholder="Price"/><br>
+					<input name="duration" type="number" min="0" required ng-model="ticketType.duration" placeholder="Duration"/><br>
+					<input type="submit" value="Create new type" ng-show="(ticketType.id==null)"/>
+					<input type="submit" value="Save changes" ng-show="(ticketType.id!=null)"/>
 				</form>
 
 			</div>
 
-		
 			
+
 		</td>
 	</tr>
 </table>

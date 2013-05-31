@@ -63,5 +63,6 @@ class LineItem extends \Eloquent
     	$this->title = '';
     	$this->ticket_type = '';
     	$this->enabled = 0;
+    	$this->id = null;
     }
 }

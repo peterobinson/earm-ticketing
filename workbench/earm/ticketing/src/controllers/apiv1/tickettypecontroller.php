@@ -21,9 +21,11 @@ class TickettypeController extends \BaseController
 	 */
 	public function create()
 	{
-		//
+		$type = new TicketType();
 
+		$type->initialise();
 
+		return $type;
 	}
 
 	/**

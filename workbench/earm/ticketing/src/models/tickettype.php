@@ -25,15 +25,17 @@ class TicketType extends \Eloquent
 						'end_hour',
 						'end_minutes',
 						'max_number',
+						'line_item_id',
 						);
 
 	protected static $rules = array(
 						'start_timestamp' => array('integer'),
 						'end_timestamp' => array('integer'),
-						'duration' => array('min:0'),
+						'duration' => array('integer','min:0'),
 						'price' => array('required','integer','min:0'),
 						'name' => array('required', 'max:64'),
 						'max_number' => array('integer','min:0'),
+						'line_item_id' => array('required', 'integer','min:1'),
 						);
 
 	protected $errors = null;
@@ -42,11 +44,11 @@ class TicketType extends \Eloquent
 	{
 
 		// allow direct timestamp update
-		if (!isset($_POST['start_timestamp']))
+		if (!\Input::get('start_timestamp'))
 		{
 			$this->start_timestamp = $this->createTimestamp('start');
 		}
-		if (!isset($_POST['end_timestamp']))
+		if (!\Input::get('end_timestamp'))
 		{
 			$this->end_timestamp = $this->createTimestamp('end');
 		}
@@ -78,6 +80,15 @@ class TicketType extends \Eloquent
 
         return parent::save($options);
 
+    }
+
+	public function initialise()
+    {
+    	$this->name = '';
+    	$this->duration = '';
+    	$this->price = '';
+    	$this->max_number = '';
+    	$this->id = null;
     }
 
     private function createTimestamp($startEnd)

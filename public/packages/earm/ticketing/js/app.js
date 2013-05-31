@@ -53,12 +53,21 @@
         require: 'ngModel',
         link: function(scope, element, attr, ngModel) {
             function fromUser(val) {
-            	return Math.round((val || 0)*100);
+            	if (val) {
+            		return Math.round(val*100);
+            	}
+
+            	return '';
 				//return (text || '').toUpperCase();
 			}
 
 			function toUser(val) {
-				return Math.round((val || 0)) / 100;
+				if (val) {
+            		return Math.round(val) / 100;
+            	}
+
+            	return '';
+				
 				//return (text || '').toLowerCase();
 			}
 			ngModel.$parsers.push(fromUser);
@@ -78,7 +87,7 @@
 //       when('/', {templateUrl: ASSET_URL + 'partials/setup.html'}).
 //       otherwise({redirectTo: '/'});
 // }]).factory('mySharedService', function($rootScope) {
-// 	var sharedService = {};
+//	var sharedService = {};
     
 //     sharedService.data = '';
 
