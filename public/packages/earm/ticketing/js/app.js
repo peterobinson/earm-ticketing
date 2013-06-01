@@ -48,33 +48,56 @@
 	});
 
 	mod.directive('pencetodecimal', function() {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function(scope, element, attr, ngModel) {
-            function fromUser(val) {
-            	if (val) {
-            		return Math.round(val*100);
-            	}
+	    return {
+	        restrict: 'A',
+	        require: 'ngModel',
+	        link: function(scope, element, attr, ngModel) {
+	            function fromUser(val) {
+	            	if (val) {
+	            		return Math.round(val*100);
+	            	}
 
-            	return '';
-				//return (text || '').toUpperCase();
-			}
+	            	return '';
+					//return (text || '').toUpperCase();
+				}
 
-			function toUser(val) {
-				if (val) {
-            		return Math.round(val) / 100;
-            	}
+				function toUser(val) {
+					if (val) {
+	            		return Math.round(val) / 100;
+	            	}
 
-            	return '';
-				
-				//return (text || '').toLowerCase();
-			}
-			ngModel.$parsers.push(fromUser);
-			ngModel.$formatters.push(toUser);
-        }
-    };
-});
+	            	return '';
+					
+					//return (text || '').toLowerCase();
+				}
+				ngModel.$parsers.push(fromUser);
+				ngModel.$formatters.push(toUser);
+	        }
+	    };
+	});
+
+	mod.directive('datepicker', function() {
+	    return {
+	        restrict: 'A',
+	        require : 'ngModel',
+	        link : function (scope, element, attrs, ngModelCtrl) {
+	            $(function(){
+	                element.datepicker({
+	                	showOn: 'button',
+	                	buttonImageOnly: true,
+	                	buttonImage: ASSET_URL + 'img/calendar2.gif',
+	                    dateFormat:'dd/mm/yy',
+	                    changeMonth: true,
+						changeYear: true,
+	                    onSelect:function (date, inst) {
+	                        ngModelCtrl.$setViewValue(date);
+	                        scope.$apply();
+	                    }
+	                });
+	            });
+	        }
+	    }
+	});
 
 	return mod;
 

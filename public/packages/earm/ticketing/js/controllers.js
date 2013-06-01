@@ -13,16 +13,16 @@ function LineItemsCtrl($scope, $http, pubsub) {
 		});
 	}
 
-	$scope.lineItem = {};
-	$scope.masterItem = {};
+	$scope.lineItem = null;
+	$scope.masterItem = null;
 
 	$scope.handleClick = function(item) {
 
-        pubsub.publish('lineItemSelected', item);
+		pubsub.publish('lineItemSelected', item);
 
-        $scope.masterItem = item;
+		$scope.masterItem = item;
 		$scope.lineItem = angular.copy(item);
-    };
+	};
 
 	var successSubmission = function(data) {
 		if (data.error) {
@@ -40,8 +40,8 @@ function LineItemsCtrl($scope, $http, pubsub) {
 		$scope.errors = ['Connection error has occured'];
 	}
 
-    $scope.submitItem = function() {
-    	if ($scope.lineItem.id == null) { //new item
+	$scope.submitItem = function() {
+		if ($scope.lineItem.id == null) { //new item
 			$http.post('tickets/apiv1/lineitems', $scope.lineItem)
 				.success(function(data) {
 					if (successSubmission(data)) {
@@ -63,15 +63,17 @@ function LineItemsCtrl($scope, $http, pubsub) {
 				})
 				.error(errorAction);
 		}
-    }
+	}
 
-    queryLineItems();
+	queryLineItems();
 }
 
 function TicketTypesCtrl($scope, $http, pubsub) {
 
 	$scope.ticketType = null;
 	$scope.master = null;
+	$scope.start_date = null;
+	$scope.end_date = null;
 
 	var getTicketTypes = function(lineItem) {
 
@@ -88,17 +90,49 @@ function TicketTypesCtrl($scope, $http, pubsub) {
 	pubsub.subscribe('lineItemSelected', function(passed) {
 
 		if (passed.id == null) {
+			$scope.ticketTypes = null;
 			$scope.ticketType = null;
+			$scope.blankTicketType = null;
 			return;
 		}
 		getTicketTypes(passed);
 	});
 
-	
+	$scope.$watch('start_date',function(newValue, oldValue) {
+		if ($scope.ticketType != null) {
+			$scope.ticketType.start_date = newValue;
+			delete $scope.ticketType.start_timestamp;
+		}
+	});
+
+	$scope.$watch('end_date',function(newValue, oldValue) {
+		if ($scope.ticketType != null) {
+			$scope.ticketType.end_date = newValue;
+			delete $scope.ticketType.end_timestamp;
+		}
+	});
 
 	$scope.ticketTypeSelect = function(type) {
 
 		$scope.master = type;
+		
+		if (type.start_timestamp == null || type.start_timestamp == 0) {
+			$scope.start_date = null;
+		}
+		else {
+			var dateS = new Date(type.start_timestamp*1000);
+
+			$scope.start_date = dateS.format("dd/mm/yyyy"); //date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+		}
+
+		if (type.end_timestamp == null || type.end_timestamp == 0) {
+			$scope.end_date = null;
+		}
+		else {
+			var dateE = new Date(type.end_timestamp*1000);
+
+			$scope.end_date = dateE.format("dd/mm/yyyy"); //date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+		}
 		$scope.ticketType = angular.copy(type);
 	}
 
@@ -142,6 +176,8 @@ function TicketTypesCtrl($scope, $http, pubsub) {
 				.error(errorAction);
 		}
 	}
+
+
 }
 
 LineItemsCtrl.$inject = ['$scope', '$http', 'pubsub']; 

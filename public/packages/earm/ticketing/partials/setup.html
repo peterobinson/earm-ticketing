@@ -5,7 +5,7 @@
 				<li ng-repeat="item in lineItems">
 					<a ng-click="handleClick(item)">{{item.title}}</a>
 				</li>
-				<li>
+				<li ng-show="(blankLineItem!=null)">
 					<a ng-click="handleClick(blankLineItem)">+ Add New</a>
 				</li>
 			</ul>
@@ -16,13 +16,19 @@
 				</li>
 			</ul>
 
-			<form ng-submit="submitItem()" >
-				<input type="text" ng-model="lineItem.title" />
+			
+
+			<form ng-submit="submitItem()" ng-show="(lineItem!=null)">
+				<input name="title" type="text" required ng-model="lineItem.title" placeholder="Category Name"/>
 				<br>
-				<select ng-model="lineItem.ticket_type">
-					<option value="Duration">Duration</option>
-					<option value="Event">Event</option>
-				</select>
+				<fieldset>
+					<legend>Category type:</legend>
+					<input type="radio" id="ticket_type-duration" name="ticket_type" value="Duration" ng-model="lineItem.ticket_type" /> <label for="ticket_type-duration">Duration</label><br>
+					<input type="radio" id="ticket_type-event" name="ticket_type" value="Event" ng-model="lineItem.ticket_type" /> <label for="ticket_type-event">Event</label><br>
+				</fieldset>
+
+				<br>
+				<input type="checkbox" id="enabled-Item" name="enabled" ng-model="lineItem.enabled" ng-checked="lineItem.enabled" /> <label for="enabled-Item">Enabled</label>
 				<br>
 				<input type="submit" value="Save changes" ng-show="(lineItem.id!=null)" />
 				<input type="submit" value="Create new" ng-show="(lineItem.id==null)" />
@@ -31,14 +37,14 @@
 
 
 		<td>
-			<div ng-controller="TicketTypesCtrl">
+			<div ng-controller="TicketTypesCtrl" ng-show="(blankTicketType!=null)">
 				<h2>Ticket Types</h2>
 
 				<ul>
 					<li ng-repeat="type in ticketTypes">
 						<a ng-click="ticketTypeSelect(type)">{{type.name}}</a>
 					</li>
-					<li>
+					<li ng-show="(blankTicketType!=null)">
 						<a ng-click="ticketTypeSelect(blankTicketType)">+ Add New</a>
 					</li>
 				</ul>
@@ -52,7 +58,16 @@
 				<form name="myForm" ng-submit="submitType()" ng-show="(ticketType != null)">
 					<input type="text" required ng-model="ticketType.name" placeholder="Ticket Type name" /><br>
 					<input name="price" pencetodecimal type="number" min="0" required ng-model="ticketType.price" placeholder="Price"/><br>
-					<input name="duration" type="number" min="0" required ng-model="ticketType.duration" placeholder="Duration"/><br>
+					<input name="duration" type="number" min="0" ng-model="ticketType.duration" placeholder="Duration"/><br>
+					<input name="max_number" type="number" min="0" required ng-model="ticketType.max_number" placeholder="Number of tickets available"/><br>
+					<input type="checkbox" id="enabled-Type" name="enabled" ng-model="ticketType.enabled" ng-checked="ticketType.enabled" /> <label for="enabled-Type">Enabled</label><br><br>
+
+
+					<input type="text" datepicker ng-model="start_date"/><br>
+					<input type="text" datepicker ng-model="end_date"/><br>
+
+
+					<br>
 					<input type="submit" value="Create new type" ng-show="(ticketType.id==null)"/>
 					<input type="submit" value="Save changes" ng-show="(ticketType.id!=null)"/>
 				</form>

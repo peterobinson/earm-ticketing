@@ -8,24 +8,24 @@ class TicketType extends \Eloquent
 
 	public $timestamps = false;
 
+	public $startDate;
+	public $endDate;
+
 	protected $fillable = array(
 						'start_timestamp',
 						'end_timestamp',
 						'duration',
 						'price',
 						'name',
-						'start_day',
-						'start_month',
-						'start_year',
+						'start_date',
 						'start_hour',
 						'start_minutes',
-						'end_day',
-						'end_month',
-						'end_year',
+						'end_date',
 						'end_hour',
 						'end_minutes',
 						'max_number',
 						'line_item_id',
+						'enabled',
 						);
 
 	protected static $rules = array(
@@ -36,33 +36,40 @@ class TicketType extends \Eloquent
 						'name' => array('required', 'max:64'),
 						'max_number' => array('integer','min:0'),
 						'line_item_id' => array('required', 'integer','min:1'),
+						'enabled' => array('integer', 'min:0', 'max:1'),
 						);
 
-	protected $errors = null;
+	protected $errors = array();
+
+	public function setStartDateAttribute($date) {
+		$this->startDate = $date;
+	}
+
+	public function setEndDateAttribute($date) {
+		$this->endDate = $date;
+	}
 
 	public function save(array $options = array())
 	{
+		// $this->errors = array($this->updateTimestamp());
+		// return false;
 
 		// allow direct timestamp update
 		if (!\Input::get('start_timestamp'))
 		{
-			$this->start_timestamp = $this->createTimestamp('start');
+			$this->updateStartTimestamp();
+			// $this->start_timestamp = $this->createTimestamp('start');
 		}
 		if (!\Input::get('end_timestamp'))
 		{
-			$this->end_timestamp = $this->createTimestamp('end');
+			$this->updateEndTimestamp();
+			//$this->end_timestamp = $this->createTimestamp('end');
 		}
 		
 		// remove date properties as these aren't going in the database.
-		unset($this->start_day);
-		unset($this->start_month);
-		unset($this->start_year);
 		unset($this->start_hour);
 		unset($this->start_minutes);
 
-		unset($this->end_day);
-		unset($this->end_month);
-		unset($this->end_year);
 		unset($this->end_hour);
 		unset($this->end_minutes);
 
@@ -71,15 +78,71 @@ class TicketType extends \Eloquent
     	if( ! $validator->passes())
 		{
 
-			$this->errors = $validator->messages()->all();
+			$this->errors = array_push($this->errors, $validator->messages()->all());
 
 			return false;
 		}
 
+		if (count($this->errors) > 0) {
+			return false;
+		}
 
 
+		// return true;
         return parent::save($options);
 
+    }
+
+    public function updateStartTimestamp() 
+    {
+    	if ($this->startDate === null) 
+    	{
+    		return true;
+    	}
+
+    	if ($this->startDate == "")
+    	{
+    		$this->start_timestamp = 0;
+    		return true;
+    	}
+
+    	$parts = explode('/', $this->startDate);
+
+    	if (count($parts) !== 3 || !checkdate($parts[1], $parts[0], $parts[2]))
+    	{
+    		$this->errors[] = "Invalid start date supplied"; 
+    		return false;
+    	}
+
+    	$this->start_timestamp = mktime(0,0,0,$parts[1],$parts[0],$parts[2]);
+
+    	return true;
+    }
+
+    public function updateEndTimestamp() 
+    {
+    	if ($this->endDate === null) 
+    	{
+    		return true;
+    	}
+
+    	if ($this->endDate == "")
+    	{
+    		$this->end_timestamp = 0;
+    		return true;
+    	}
+
+    	$parts = explode('/', $this->endDate);
+
+    	if (count($parts) !== 3 || !checkdate($parts[1], $parts[0], $parts[2]))
+    	{
+    		$this->errors[] = "Invalid end date supplied"; 
+    		return false;
+    	}
+
+    	$this->end_timestamp = mktime(0,0,0,$parts[1],$parts[0],$parts[2]);
+
+    	return true;
     }
 
 	public function initialise()
@@ -89,19 +152,20 @@ class TicketType extends \Eloquent
     	$this->price = '';
     	$this->max_number = '';
     	$this->id = null;
+    	$this->enabled = 0;
     }
 
     private function createTimestamp($startEnd)
     {
-    	// check if at least day, month and year exist
+    	// check if date submitted
 
     	if (! isset($this[$startEnd . '_day']) || ! isset($this[$startEnd . '_month']) || !isset($this[$startEnd . '_year']))
     	{
     		return 0;
     	}
 
-    	$hour = $this[$startEnd . '_hour'] ?: 0;
-    	$minutes = $this[$startEnd . '_minutes'] ?: 0;
+    	$hour = 0; //$this[$startEnd . '_hour'] ?: 0;
+    	$minutes = 0; //$this[$startEnd . '_minutes'] ?: 0;
 
 
     	$dateTime = Carbon::create($this[$startEnd . '_year'], $this[$startEnd . '_month'], $this[$startEnd . '_day'], $hour, $minutes, 0);
