@@ -1,7 +1,5 @@
 <?php namespace Earm\Ticketing\Models;
 
-use Carbon\Carbon;
-
 class TicketType extends \Eloquent
 {
 	protected $table = "ticket_types";
@@ -58,12 +56,10 @@ class TicketType extends \Eloquent
 		if (!\Input::get('start_timestamp'))
 		{
 			$this->updateStartTimestamp();
-			// $this->start_timestamp = $this->createTimestamp('start');
 		}
 		if (!\Input::get('end_timestamp'))
 		{
 			$this->updateEndTimestamp();
-			//$this->end_timestamp = $this->createTimestamp('end');
 		}
 		
 		// remove date properties as these aren't going in the database.
@@ -153,24 +149,6 @@ class TicketType extends \Eloquent
     	$this->max_number = '';
     	$this->id = null;
     	$this->enabled = 0;
-    }
-
-    private function createTimestamp($startEnd)
-    {
-    	// check if date submitted
-
-    	if (! isset($this[$startEnd . '_day']) || ! isset($this[$startEnd . '_month']) || !isset($this[$startEnd . '_year']))
-    	{
-    		return 0;
-    	}
-
-    	$hour = 0; //$this[$startEnd . '_hour'] ?: 0;
-    	$minutes = 0; //$this[$startEnd . '_minutes'] ?: 0;
-
-
-    	$dateTime = Carbon::create($this[$startEnd . '_year'], $this[$startEnd . '_month'], $this[$startEnd . '_day'], $hour, $minutes, 0);
-
-    	return $dateTime->timestamp;
     }
 
     public function validation_errors()

@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<title>Backend</title>
 	<link rel="stylesheet" href="<?=URL::asset("packages/earm/ticketing/css/smoothness/jquery-ui-1.10.3.custom.min.css")?>">
+	<link rel="stylesheet" href="<?=URL::asset("packages/earm/ticketing/css/backend.css")?>">
 	<script>
 
 		var BASE_URL = 'http://localhost/ticketing/public/';
@@ -19,8 +20,8 @@
 	
 </head>
 <body>
-
-	<div ng-view></div>
+	<div class="loader"></div>
+	<div class="wrapper" ng-view></div>
 
 </body>
 </html>

@@ -1,7 +1,8 @@
-<table>
-	<tr>
-		<td ng-controller="LineItemsCtrl">
-			<ul>
+
+	<div class="lineItemPane" ng-controller="LineItemsCtrl">
+		<div>
+			<ul class="scrollList">
+				<div class="inner-shadow"></div>
 				<li ng-repeat="item in lineItems">
 					<a ng-click="handleClick(item)">{{item.title}}</a>
 				</li>
@@ -10,16 +11,19 @@
 				</li>
 			</ul>
 
+			
+		</div>
+		
+		<div class="lineItemFormContainer">
 			<ul>
 				<li ng-repeat="error in errors">
 					{{error}}
 				</li>
 			</ul>
 
-			
-
 			<form ng-submit="submitItem()" ng-show="(lineItem!=null)">
-				<input name="title" type="text" required ng-model="lineItem.title" placeholder="Category Name"/>
+				<label for="cat-title">Category Name:</label> 
+				<input name="title" id="cat-title" type="text" ng-model="lineItem.title" placeholder="Category Name"/>
 				<br>
 				<fieldset>
 					<legend>Category type:</legend>
@@ -32,50 +36,50 @@
 				<br>
 				<input type="submit" value="Save changes" ng-show="(lineItem.id!=null)" />
 				<input type="submit" value="Create new" ng-show="(lineItem.id==null)" />
-			</form>		
-		</td>
+			</form>	
+		</div>	
+	</div>
+
+	<script>
+		$(".ticketTypeList").css('margin-top', $(".lineItemFormContainer").height());
+	</script>
+
+	<div class="typePane" ng-controller="TicketTypesCtrl" ng-show="(blankTicketType!=null)">
+		<div class="ticketTypeList">
+			<h2>Ticket Types</h2>
+
+			<ul class="scrollList">
+				<div class="inner-shadow"></div>
+				<li ng-repeat="type in ticketTypes">
+					<a ng-click="ticketTypeSelect(type)">{{type.name}}</a>
+				</li>
+				<li ng-show="(blankTicketType!=null)">
+					<a ng-click="ticketTypeSelect(blankTicketType)">+ Add New</a>
+				</li>
+			</ul>
+
+			<ul>
+				<li ng-repeat="error in errors">
+					{{error}}
+				</li>
+			</ul>
+		</div>
+		<div>
+			<form name="myForm" ng-submit="submitType()" ng-show="(ticketType != null)">
+				<input type="text" required ng-model="ticketType.name" placeholder="Ticket Type name" /><br>
+				<input name="price" pencetodecimal type="number" min="0" required ng-model="ticketType.price" placeholder="Price"/><br>
+				<input name="duration" type="number" min="0" ng-model="ticketType.duration" placeholder="Duration"/><br>
+				<input name="max_number" type="number" min="0" required ng-model="ticketType.max_number" placeholder="Number of tickets available"/><br>
+				<input type="checkbox" id="enabled-Type" name="enabled" ng-model="ticketType.enabled" ng-checked="ticketType.enabled" /> <label for="enabled-Type">Enabled</label><br><br>
 
 
-		<td>
-			<div ng-controller="TicketTypesCtrl" ng-show="(blankTicketType!=null)">
-				<h2>Ticket Types</h2>
-
-				<ul>
-					<li ng-repeat="type in ticketTypes">
-						<a ng-click="ticketTypeSelect(type)">{{type.name}}</a>
-					</li>
-					<li ng-show="(blankTicketType!=null)">
-						<a ng-click="ticketTypeSelect(blankTicketType)">+ Add New</a>
-					</li>
-				</ul>
-
-				<ul>
-					<li ng-repeat="error in errors">
-						{{error}}
-					</li>
-				</ul>
-
-				<form name="myForm" ng-submit="submitType()" ng-show="(ticketType != null)">
-					<input type="text" required ng-model="ticketType.name" placeholder="Ticket Type name" /><br>
-					<input name="price" pencetodecimal type="number" min="0" required ng-model="ticketType.price" placeholder="Price"/><br>
-					<input name="duration" type="number" min="0" ng-model="ticketType.duration" placeholder="Duration"/><br>
-					<input name="max_number" type="number" min="0" required ng-model="ticketType.max_number" placeholder="Number of tickets available"/><br>
-					<input type="checkbox" id="enabled-Type" name="enabled" ng-model="ticketType.enabled" ng-checked="ticketType.enabled" /> <label for="enabled-Type">Enabled</label><br><br>
+				<input type="text" datepicker ng-model="start_date"/><br>
+				<input type="text" datepicker ng-model="end_date"/><br>
 
 
-					<input type="text" datepicker ng-model="start_date"/><br>
-					<input type="text" datepicker ng-model="end_date"/><br>
-
-
-					<br>
-					<input type="submit" value="Create new type" ng-show="(ticketType.id==null)"/>
-					<input type="submit" value="Save changes" ng-show="(ticketType.id!=null)"/>
-				</form>
-
-			</div>
-
-			
-
-		</td>
-	</tr>
-</table>
+				<br>
+				<input type="submit" value="Create new type" ng-show="(ticketType.id==null)"/>
+				<input type="submit" value="Save changes" ng-show="(ticketType.id!=null)"/>
+			</form>
+		</div>
+	</div>

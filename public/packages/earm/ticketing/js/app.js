@@ -14,8 +14,9 @@
 
 	mod.config(['$routeProvider', function($routeProvider) {
 	  $routeProvider.
-	      when('/', {templateUrl: ASSET_URL + 'partials/setup.html'}).
-	      otherwise({redirectTo: '/'});
+	      when('/configuration', {templateUrl: ASSET_URL + 'partials/setup.html'}).
+	      when('/orders', {templateUrl: ASSET_URL + 'partials/setup.html'}).
+	      otherwise({redirectTo: '/configuration'});
 	}])
 
 	mod.factory('pubsub', function() {
