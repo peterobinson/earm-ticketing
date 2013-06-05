@@ -1,0 +1,69 @@
+
+<div ng-controller="OrderSearchCtrl">
+	<table>
+		<tr>
+			<td>
+
+				<input type="text" ng-model="searchString" />
+				<ul>
+							
+					<li ng-click="loadOrder(order)" ng-repeat="order in orderResults">
+						{{order.title}} {{order.first_name}} {{order.last_name}}
+					</li>
+				</ul>
+			</td>
+			<td>
+				<div ng-show="(currentOrder != null)">
+					
+
+					<div ng-show="(editOrder == null)">
+						<h2>Current order</h2>
+
+						<span ng-click="loadEditOrder()">Edit Customer Details</span>
+
+						<p>Name: {{currentOrder.title}} {{currentOrder.first_name}} {{currentOrder.last_name}}</p>
+
+						<p>Address:</p>
+						<p>{{currentOrder.address_line1}}</p>
+						<p>{{currentOrder.address_line2}}</p>
+						<p>{{currentOrder.address_line3}}</p>
+						<p>{{currentOrder.address_line4}}</p>
+						<p>{{currentOrder.address_city}}</p>
+						<p>{{currentOrder.address_county}}</p>
+						<p>{{currentOrder.address_country}}</p>
+						<p>{{currentOrder.address_postcode}}</p>
+
+						<p>Phone: {{currentOrder.phone}}</p>
+						<p>Email: {{currentOrder.email}}</p>
+					</div>
+
+					<div ng-show="(editOrder !== null)">
+						<ul>
+							<li ng-repeat="error in errors">
+								{{error}}
+							</li>
+						</ul>
+
+						<form ng-submit="submitOrderDetails()">
+							Title: <input type="text" ng-model="editOrder.title" /><br>
+							First Name: <input type="text" ng-model="editOrder.first_name" /><br>
+							Last Name: <input type="text" ng-model="editOrder.last_name" /><br>
+							Address 1: <input type="text" ng-model="editOrder.address_line1" /><br>
+							Address 2: <input type="text" ng-model="editOrder.address_line2" /><br>
+							Address 3: <input type="text" ng-model="editOrder.address_line3" /><br>
+							Address 4: <input type="text" ng-model="editOrder.address_line4" /><br>
+							Address city: <input type="text" ng-model="editOrder.address_city" /><br>
+							Address County: <input type="text" ng-model="editOrder.address_county" /><br>
+							Address Country: <input type="text" ng-model="editOrder.address_country" /><br>
+							Address Postcode: <input type="text" ng-model="editOrder.address_postcode" /><br>
+							Phone: <input type="text" ng-model="editOrder.phone" /><br>
+							Email: <input type="text" ng-model="editOrder.email" /><br>
+
+							<input type="submit" value="Save" /> <span ng-click="cancelEditOrder()">Cancel</span>
+						</form>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>

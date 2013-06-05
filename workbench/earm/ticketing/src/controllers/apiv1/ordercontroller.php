@@ -1,6 +1,7 @@
 <?php namespace Earm\Ticketing\Controllers\Apiv1;
 
 use \Earm\Ticketing\Models\Ticket;
+use \Earm\Ticketing\Models\Order;
 
 class OrderController extends \BaseController
 {
@@ -11,7 +12,15 @@ class OrderController extends \BaseController
 	 */
 	public function index()
 	{
-		return Order::all();
+		$searchQuery = \Input::get('search',null);
+
+		if ($searchQuery === null)
+		{
+			return Order::all();
+		}
+
+		return Order::where('last_name', 'LIKE', '%'.$searchQuery.'%')->get();
+		
 	}
 
 	/**

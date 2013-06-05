@@ -1,6 +1,7 @@
 <?php namespace Earm\Ticketing\Models;
 
 
+
 class Order extends \Eloquent
 {
 	protected $table = 'orders';
@@ -16,6 +17,7 @@ class Order extends \Eloquent
 						'address_line3',
 						'address_line4',
 						'address_city',
+						'address_county',
 						'address_country',
 						'address_postcode',
 						'email',
@@ -26,8 +28,17 @@ class Order extends \Eloquent
 
 	protected static $rules = array(
 						'title' => array('required','max:16'),
-						'first_name' => array('required','size:64'),
-						'last_name' => array('required', 'size:64'),
+						'first_name' => array('required','max:64'),
+						'last_name' => array('required', 'max:64'),
+						'address_line1' => array('required', 'max:128'),
+						'address_line2' => array('max:128'),
+						'address_line3' => array('max:128'),
+						'address_line4' => array('max:128'),
+						'address_city' => array('max:128'),
+						'address_county' => array('max:64'),
+						'address_country' => array('max:64'),
+						'address_postcode' => array('max:32'),
+
 						);
 
 

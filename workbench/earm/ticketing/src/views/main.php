@@ -17,6 +17,7 @@
 	<script src="<?=URL::asset("packages/earm/ticketing/js/angular.min.js")?>"></script>
 	<script src="<?=URL::asset("packages/earm/ticketing/js/app.js")?>"></script>
 	<script src="<?=URL::asset("packages/earm/ticketing/js/controllers.js")?>"></script>
+	<script src="<?=URL::asset("packages/earm/ticketing/js/controllers/orders.js")?>"></script>
 	
 </head>
 <body>

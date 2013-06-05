@@ -15,7 +15,7 @@
 	mod.config(['$routeProvider', function($routeProvider) {
 	  $routeProvider.
 	      when('/configuration', {templateUrl: ASSET_URL + 'partials/setup.html'}).
-	      when('/orders', {templateUrl: ASSET_URL + 'partials/setup.html'}).
+	      when('/orders', {templateUrl: ASSET_URL + 'partials/orders.html'}).
 	      otherwise({redirectTo: '/configuration'});
 	}])
 
